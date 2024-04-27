@@ -18,6 +18,7 @@ public interface Named {
     default String getBestName(String fallback) {
         return Optional.ofNullable(getDisplayName())
                 .orElseGet(() -> Optional.ofNullable(getName())
-                        .orElse(fallback));
+                .orElse(fallback))
+                ;
     }
 }

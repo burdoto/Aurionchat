@@ -35,10 +35,7 @@ public class ChatListener implements ServerMessageEvents.AllowChatMessage {
                 aurionChatPlayer,
                 channel.urlMode
         );
-        AurionPacket.Builder packet = AurionPacket.chat(
-                        aurionChatPlayer,
-                        message.getSignedContent(),
-                        gson().serialize(messageFormat))
+        AurionPacket.Builder packet = AurionPacket.chat(aurionChatPlayer, gson().serialize(messageFormat))
                 .channel(currentChannel);
         try {
             plugin.getChatService().send(packet);

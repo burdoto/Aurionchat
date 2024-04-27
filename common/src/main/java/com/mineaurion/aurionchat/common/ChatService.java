@@ -1,6 +1,5 @@
 package com.mineaurion.aurionchat.common;
 
-import com.google.gson.Gson;
 import com.mineaurion.aurionchat.api.AurionPacket;
 import com.mineaurion.aurionchat.common.config.ConfigurationAdapter;
 import com.rabbitmq.client.Channel;
@@ -9,7 +8,6 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 import com.rabbitmq.client.impl.ForgivingExceptionHandler;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -79,10 +77,10 @@ public class ChatService {
 
     private DeliverCallback consumer(){
         return (consumerTag, delivery) -> {
-            AurionPacket packet = new Gson().fromJson(new String(delivery.getBody(), StandardCharsets.UTF_8), AurionPacket.class);
-            Component messageDeserialize = GsonComponentSerializer.gson().deserialize(packet.getTellRawData());
+            AurionPacket packet = AurionPacket.fromJson(new String(delivery.getBody(), StandardCharsets.UTF_8));
+            Component messageDeserialize = packet.getComponent();
             if(this.config.getBoolean("options.spy", false)){
-                plugin.getlogger().info(Utils.getDisplayString(messageDeserialize));
+                plugin.getlogger().info(packet.getDisplayString());
             }
 
             plugin.getAurionChatPlayers().forEach((uuid, aurionChatPlayers) -> {

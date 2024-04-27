@@ -1,6 +1,5 @@
 package com.mineaurion.aurionchat.common.player;
 
-import com.mineaurion.aurionchat.api.model.Player;
 import com.mineaurion.aurionchat.api.model.ServerPlayer;
 import com.mineaurion.aurionchat.common.LuckPermsUtils;
 import net.kyori.adventure.text.Component;

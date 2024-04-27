@@ -121,27 +121,6 @@ public class Utils {
         return component.build();
     }
 
-    public static String getDisplayString(Component component) {
-        StringBuilder content = new StringBuilder();
-
-        if(!component.children().isEmpty()){
-            component.children().forEach( child -> content.append(getDisplayString(child)));
-        }
-
-        if(component instanceof TextComponent){
-            content.append(((TextComponent) component).content());
-        }
-        // todo: support other types
-        //else if (it instanceof BlockNBTComponent) ;
-        //else if (it instanceof EntityNBTComponent) ;
-        //else if (it instanceof KeybindComponent) ;
-        //else if (it instanceof ScoreComponent) ;
-        //else if (it instanceof SelectorComponent) ;
-        //else if (it instanceof StorageNBTComponent) ;
-        //else if (it instanceof TranslatableComponent) ;
-        return content.toString();
-    }
-
     private static Component replaceToken(String text, AurionChatPlayer aurionChatPlayer) {
         return LegacyComponentSerializer.legacy('&').deserialize(
                 text.replace("{prefix}", aurionChatPlayer.getPlayer().getPrefix())

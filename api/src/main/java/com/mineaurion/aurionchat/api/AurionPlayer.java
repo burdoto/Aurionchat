@@ -1,14 +1,11 @@
 package com.mineaurion.aurionchat.api;
 
 import com.mineaurion.aurionchat.api.model.Player;
-import lombok.Value;
-import lombok.experimental.NonFinal;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.UUID;
 
-@Value @NonFinal
 public class AurionPlayer implements Player {
     UUID id;
     String name;
@@ -22,5 +19,30 @@ public class AurionPlayer implements Player {
         this.prefix = prefix;
         this.suffix = suffix;
         this.displayName = Optional.ofNullable(prefix).orElse("") + name + Optional.ofNullable(suffix).orElse("");
+    }
+
+    @Override
+    public @Nullable String getName() {
+        return name;
+    }
+
+    @Override
+    public @Nullable String getDisplayName() {
+        return displayName;
+    }
+
+    @Override
+    public UUID getId() {
+        return id;
+    }
+
+    @Override
+    public @Nullable String getPrefix() {
+        return prefix;
+    }
+
+    @Override
+    public @Nullable String getSuffix() {
+        return suffix;
     }
 }

@@ -42,11 +42,9 @@ public class ChatListener implements Listener {
                 aurionChatPlayer,
                 plugin.getConfigurationAdapter().getChannels().get(currentChannel).urlMode
         );
-        AurionPacket.Builder packet = AurionPacket.chat(
-                aurionChatPlayer,
-                event.getMessage(),
-                gson().serialize(messageFormat))
-                .channel(currentChannel);
+        AurionPacket.Builder packet = AurionPacket.chat(aurionChatPlayer, gson().serialize(messageFormat))
+                .channel(currentChannel)
+                ;
         try{
             plugin.getChatService().send(packet);
         }

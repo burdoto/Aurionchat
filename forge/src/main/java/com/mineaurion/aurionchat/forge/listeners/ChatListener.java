@@ -35,10 +35,7 @@ public class ChatListener {
                 aurionChatPlayer,
                 channel.urlMode
         );
-        AurionPacket.Builder packet = AurionPacket.chat(
-                        aurionChatPlayer,
-                        event.getRawText(),
-                        gson().serialize(component))
+        AurionPacket.Builder packet = AurionPacket.chat(aurionChatPlayer, gson().serialize(component))
                 .channel(currentChannel);
         try {
             plugin.getChatService().send(packet);

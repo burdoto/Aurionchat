@@ -2,26 +2,26 @@ import com.mineaurion.aurionchat.api.model.ServerPlayer;
 import com.mineaurion.aurionchat.common.AbstractAurionChat;
 import com.mineaurion.aurionchat.common.AurionChatPlayer;
 import com.mineaurion.aurionchat.common.config.ConfigurationAdapter;
-import com.mineaurion.aurionchat.api.model.Player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.UnaryOperator;
 
-import static com.mineaurion.aurionchat.common.Utils.*;
+import static com.mineaurion.aurionchat.api.AurionPacket.getStringFromComponent;
+import static com.mineaurion.aurionchat.common.Utils.URL_MODE;
+import static com.mineaurion.aurionchat.common.Utils.processMessage;
 import static net.kyori.adventure.text.Component.text;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 @SuppressWarnings("HttpUrlsUsage")
 public class TestMessageProcessing {
+
+    static UUID uuid = UUID.fromString("73f8bcd4-c711-4803-b7cd-0fcebdf2ee04");
     static String prefix = "[U]";
     static String displayName = "Kaleidox";
     static String suffix = "!";
@@ -32,7 +32,7 @@ public class TestMessageProcessing {
     static String testBase = "here is a url; %s and here is another: %s thats all there is!";
 
     static String testUrlClickable(String it) {
-        return "https://" + it + "";
+        return "https://" + it;
     }
 
     static String testUrlHttp(String it) {
@@ -67,12 +67,13 @@ public class TestMessageProcessing {
         plugin = mock(AbstractAurionChat.class);
 
         // we could specify call count here for micro-optimization
+        expect(playerAdp.getId()).andReturn(uuid).atLeastOnce();
         expect(playerAdp.getDisplayName()).andReturn(displayName).atLeastOnce();
         expect(playerAdp.getPrefix()).andReturn(prefix).atLeastOnce();
         expect(playerAdp.getSuffix()).andReturn(suffix).atLeastOnce();
-        expect(playerAdp.hasPermission("aurionchat.chat.colors")).andReturn(true).atLeastOnce();
-        expect(configAdp.getChannels()).andReturn(new HashMap<>()).anyTimes();
-        expect(plugin.getConfigurationAdapter()).andReturn(configAdp).anyTimes();
+        expect(playerAdp.hasPermission("aurionchat.chat.colors")).andReturn(true).anyTimes();
+        expect(configAdp.getChannels()).andReturn(new HashMap<>()).atLeastOnce();
+        expect(plugin.getConfigurationAdapter()).andReturn(configAdp).atLeastOnce();
 
         replay(playerAdp, configAdp, plugin);
         player = new AurionChatPlayer(playerAdp, plugin);
@@ -99,7 +100,7 @@ public class TestMessageProcessing {
         assertTrue("invalid children count", children.get(1).children().size() > childrenIndex);
         Component child = children.get(1).children().get(childrenIndex);
         ClickEvent event = child.clickEvent();
-        assertNull("url should not be clickable: "+getDisplayString(child),event);
+        assertNull("url should not be clickable: "+ getStringFromComponent(child),event);
     }
 
     /**
@@ -109,10 +110,7 @@ public class TestMessageProcessing {
     public void testChildrenOneLevel(){
         Component withChild = Component.text().append(text(testUrl1)).append(text(testUrl2)).build();
 
-        Component output = processMessage(format, withChild, player, Arrays.asList(URL_MODE.DISPLAY_ONLY_DOMAINS));
-
-        String displayString = getDisplayString(output);
-
+        Component output = processMessage(format, withChild, player, Collections.singletonList(URL_MODE.DISPLAY_ONLY_DOMAINS));
         // +1 is the prefix component we create in the method
         assertEquals(2 + 1, output.children().size());
     }
@@ -127,7 +125,7 @@ public class TestMessageProcessing {
                 .build()
                 ;
         Component output = processMessage(format, grandParent, player, Collections.emptyList());
-        String displayString = getDisplayString(output);
+        String displayString = getStringFromComponent(output);
         System.out.println(displayString);
         assertEquals(2 + 1, output.children().size());
     }
@@ -137,7 +135,7 @@ public class TestMessageProcessing {
         Component output = processMessage(format, text(testUrl1), player, Arrays.asList(URL_MODE.ALLOW, URL_MODE.DISPLAY_ONLY_DOMAINS));
 
         // check display
-        String displayString = getDisplayString(output);
+        String displayString = getStringFromComponent(output);
         System.out.println(displayString);
         assertEquals("display string mismatch", format(testUrl1), displayString);
         checkClickable(output, 0, 0, TestMessageProcessing::testUrlClickable);
@@ -146,10 +144,10 @@ public class TestMessageProcessing {
 
     @Test
     public void testClickDomain() {
-        Component output = processMessage(format, text(testUrl1), player, Arrays.asList(URL_MODE.CLICK_DOMAIN));
+        Component output = processMessage(format, text(testUrl1), player, Collections.singletonList(URL_MODE.CLICK_DOMAIN));
 
         // check display
-        String displayString = getDisplayString(output);
+        String displayString = getStringFromComponent(output);
         System.out.println(displayString);
 
         assertEquals("display string mismatch", format(testUrl1), displayString);
@@ -158,10 +156,10 @@ public class TestMessageProcessing {
 
     @Test
     public void testUrl() {
-        Component output = processMessage(format, text(testUrlClickable(testUrl1)), player, Arrays.asList(URL_MODE.ALLOW));
+        Component output = processMessage(format, text(testUrlClickable(testUrl1)), player, Collections.singletonList(URL_MODE.ALLOW));
 
         // check display
-        String displayString = getDisplayString(output);
+        String displayString = getStringFromComponent(output);
         System.out.println(displayString);
         assertEquals("display string mismatch", format(testUrlClickable(testUrl1)), displayString);
 
@@ -173,7 +171,7 @@ public class TestMessageProcessing {
         Component output = processMessage(format, text(testText(testUrl1, testUrlHttp(testUrl2), false)), player, Arrays.asList(URL_MODE.FORCE_HTTPS, URL_MODE.ALLOW));
 
         // check display
-        String displayString = getDisplayString(output);
+        String displayString = getStringFromComponent(output);
         System.out.println(displayString);
         assertEquals("display string mismatch", testText(testUrl1, testUrlClickable(testUrl2), true), displayString);
 
@@ -186,7 +184,7 @@ public class TestMessageProcessing {
         Component output = processMessage(format, text(testText(testUrl1, testUrlClickable(testUrl2), false)), player, Arrays.asList(URL_MODE.DISPLAY_ONLY_DOMAINS, URL_MODE.DISSALLOW_URL));
 
         // check display
-        String displayString = getDisplayString(output);
+        String displayString = getStringFromComponent(output);
         System.out.println(displayString);
         assertEquals("display string mismatch", testText(testUrl1, testUrlRemoved, true), displayString);
 
@@ -196,10 +194,10 @@ public class TestMessageProcessing {
 
     @Test
     public void testDeniedUrlDomainScan() {
-        Component output = processMessage(format, text(testText(testUrl1, testUrlClickable(testUrl2), false)), player, Arrays.asList(URL_MODE.DISALLOW));
+        Component output = processMessage(format, text(testText(testUrl1, testUrlClickable(testUrl2), false)), player, Collections.singletonList(URL_MODE.DISALLOW));
 
         // check display
-        String displayString = getDisplayString(output);
+        String displayString = getStringFromComponent(output);
         System.out.println(displayString);
         assertEquals("display string mismatch", testText(testUrlRemoved, testUrlRemoved, true), displayString);
 
@@ -212,7 +210,7 @@ public class TestMessageProcessing {
         Component output = processMessage(format, text(testText(testUrlClickable(testUrl1), testUrlClickable(testUrl2), false)), player, Arrays.asList(URL_MODE.CLICK_DOMAIN, URL_MODE.DISPLAY_ONLY_DOMAINS));
 
         // check display
-        String displayString = getDisplayString(output);
+        String displayString = getStringFromComponent(output);
         System.out.println(displayString);
         assertEquals("display string mismatch", testText(testUrl1, testUrl2, true), displayString);
 
@@ -222,10 +220,10 @@ public class TestMessageProcessing {
 
     @Test
     public void testHttp() {
-        Component output = processMessage(format, text(testText(testUrl1, testUrlHttp(testUrl2), false)), player, Arrays.asList(URL_MODE.ALLOW));
+        Component output = processMessage(format, text(testText(testUrl1, testUrlHttp(testUrl2), false)), player, Collections.singletonList(URL_MODE.ALLOW));
 
         // check display
-        String displayString = getDisplayString(output);
+        String displayString = getStringFromComponent(output);
         System.out.println(displayString);
         assertEquals("display string mismatch", testText(testUrl1, testUrlHttp(testUrl2), true), displayString);
 

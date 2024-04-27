@@ -143,10 +143,7 @@ public class ChatCommandCommon {
     public boolean onCommand(AurionChatPlayer aurionChatPlayers, Component message, String channel, String format) {
         aurionChatPlayers.addChannel(channel);
         Component component = Utils.processMessage(format, message, aurionChatPlayers, Collections.singletonList(Utils.URL_MODE.ALLOW));
-        AurionPacket.Builder packet = AurionPacket.chat(
-                        aurionChatPlayers,
-                        Utils.getDisplayString(message),
-                        GsonComponentSerializer.gson().serialize(component))
+        AurionPacket.Builder packet = AurionPacket.chat(aurionChatPlayers, GsonComponentSerializer.gson().serialize(component))
                 .channel(channel);
         try {
             plugin.getChatService().send(packet);

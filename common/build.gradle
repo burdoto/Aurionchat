@@ -14,8 +14,7 @@ jacocoTestReport {
 
 dependencies {
 
-    compileOnly 'com.google.code.gson:gson:2.7'
-    compileOnly 'com.google.guava:guava:19.0'
+    compileOnly 'com.google.guava:guava:33.1.0-jre'
     compileOnly 'org.jetbrains:annotations:21.+'
 
     api project(':api')
