@@ -32,6 +32,7 @@ public abstract class AbstractAurionChat implements AurionChatPlugin {
             registerPlatformListeners(); // if no error , init of the "plugin"
             registerCommands();
         } catch (IOException e) {
+            logger.severe("Could not enable AurionChat", e);
             // perform action in case of error
             disablePlugin();
         }
