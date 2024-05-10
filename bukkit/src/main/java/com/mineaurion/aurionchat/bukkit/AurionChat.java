@@ -1,7 +1,6 @@
 package com.mineaurion.aurionchat.bukkit;
 
 import com.mineaurion.aurionchat.bukkit.listeners.ChatListener;
-import com.mineaurion.aurionchat.bukkit.listeners.CommandListener;
 import com.mineaurion.aurionchat.bukkit.listeners.LoginListener;
 import com.mineaurion.aurionchat.common.config.ConfigurationAdapter;
 import com.mineaurion.aurionchat.common.logger.JavaPluginLogger;
@@ -32,7 +31,6 @@ public class AurionChat extends AbstractAurionChat {
     protected void registerPlatformListeners() {
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new LoginListener(this), getBootstrap());
-        pluginManager.registerEvents(new CommandListener(this), getBootstrap());
         pluginManager.registerEvents(new ChatListener(this), getBootstrap());
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 public class LeaveChannel extends SingleCommand {
 
     public LeaveChannel(){
-        super(CommandSpec.LEAVE, "Join", "aurionchat.command.join", Predicates.inRange(1,2));
+        super(CommandSpec.LEAVE, "Join", "aurionchat.command.leave", Predicates.inRange(1,2));
     }
 
     @Override

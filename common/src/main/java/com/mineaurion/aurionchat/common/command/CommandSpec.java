@@ -16,7 +16,12 @@ public enum CommandSpec {
     SPY("/%s spy <channel>",
             arg("channel", true)),
 
-    ALL_LISTEN("/%s alllisten");
+    ALL_LISTEN("/%s alllisten"),
+
+    RELOAD("/%s reload")
+    ;
+
+
 
     public final static String PERMISSION_BY_CHANNEL = "aurionchat.channel.%s.%s";
     private final String usage;

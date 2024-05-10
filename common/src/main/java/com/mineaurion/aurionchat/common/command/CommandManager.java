@@ -4,8 +4,10 @@ package com.mineaurion.aurionchat.common.command;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.mineaurion.aurionchat.api.model.ServerPlayer;
+import com.mineaurion.aurionchat.common.AurionChatPlayer;
 import com.mineaurion.aurionchat.common.command.tabcomplete.CompletionSupplier;
 import com.mineaurion.aurionchat.common.command.tabcomplete.TabCompleter;
+import com.mineaurion.aurionchat.common.commands.*;
 import com.mineaurion.aurionchat.common.locale.Message;
 import com.mineaurion.aurionchat.common.misc.ImmutableCollectors;
 import com.mineaurion.aurionchat.common.plugin.AurionChatPlugin;
@@ -25,11 +27,11 @@ public class CommandManager {
     public CommandManager(AurionChatPlugin plugin){
         this.plugin = plugin;
         this.mainCommands = ImmutableList.<AbstractCommand>builder()
-//                .add(new BalanceInfo())
-//                .add(new SetAmount())
-//                .add(new AddAmount())
-//                .add(new WithdrawAmount())
-//                .add(new Pay())
+                .add(new AllListen())
+                .add(new JoinChannel())
+                .add(new LeaveChannel())
+                .add(new SpyChannel())
+                .add(new Reload())
                 .build()
                 .stream()
                 .collect(ImmutableCollectors.toMap(c -> c.getName().toLowerCase(Locale.ROOT), Function.identity()));
@@ -56,11 +58,8 @@ public class CommandManager {
 
     private void execute(ServerPlayer sender, String label, List<String> arguments){
         if(arguments.isEmpty() || arguments.size() == 1 && arguments.get(0).trim().isEmpty()){
-            sender.sendMessage(Message.prefixed(Component.text()
-                    .color(NamedTextColor.DARK_GREEN)
-                    .append(Component.text("Running Aurionchat"))
-                    .append(Component.space())
-            ));
+            AurionChatPlayer aurionChatPlayer = this.plugin.getAurionChatPlayers().get(sender.getId());
+            Message.COMMAND_DEFAULT.send(sender, aurionChatPlayer.getCurrentChannel(), String.join(" ", aurionChatPlayer.getChannels()));
             return;
         }
 

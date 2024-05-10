@@ -9,6 +9,7 @@ import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.TextComponent;
 
 import java.util.List;
+import java.util.Map;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
@@ -40,38 +41,43 @@ public interface Message {
     Args1<String> CHANNEL_JOIN = (channel) -> joinNewline(
             prefixed(text()
                     .color(AQUA)
-                    .append(text(String.format("You have joined the channel %s", channel), WHITE))
+                    .append(text(String.format("You have joined the %s channel", channel), GOLD))
             )
     );
 
     Args1<String> CHANNEL_LEAVE = (channel) -> joinNewline(
             prefixed(text()
                     .color(AQUA)
-                    .append(text(String.format("You have leaved the channel %s", channel), WHITE))
+                    .append(text(String.format("You have leave the %s channel", channel), GOLD))
             )
     );
 
     Args1<String> CHANNEL_SPY = (channel) -> joinNewline(
             prefixed(text()
                     .color(AQUA)
-                    .append(text(String.format("You have listenned the channel %s", channel), WHITE))
+                    .append(text(String.format("You have spy the %s channel", channel), GOLD))
             )
     );
 
-    Args0 CHANNEL_ALLLISTEN = () -> prefixed(text("You have listenned to all channel")).color(WHITE);
-
-    Args1<List<Channel>> CHANNEL_INFO = (channels) -> joinNewline(
-            prefixed(text()
-                    .color(AQUA)
-                    .append(text("- ", WHITE))
-                    .append(text("Player: "))
+    Args2<String, String> COMMAND_DEFAULT = (currentChannel, channels) -> joinNewline(
+            prefixed(
+                    text("Your current channel:").color(GRAY).append(space()).append(text(currentChannel).color(WHITE))
             ),
-            prefixed(text()
-                    .color(AQUA)
-                    .append(text("- ", WHITE))
-                    .append(text("Amount: "))
+            prefixed(
+                    text("Spying on channel:").color(GRAY).append(space()).append(text(channels).color(WHITE))
             )
     );
+
+    Args0 COMMAND_RELOAD = () -> joinNewline(
+            prefixed(
+                    text("Reconnect successfull").color(GREEN)
+            ),
+            prefixed(
+                    text("For now this command doesn't reload the config").color(WHITE)
+            )
+    );
+
+    Args0 COMMAND_RELOAD_ERROR = () -> prefixed(text("Can not reconnect check the server log for more information").color(RED));
 
     Args1<String> CHANNEL_NOT_FOUND = (channel) -> joinNewline(
             prefixed(text()

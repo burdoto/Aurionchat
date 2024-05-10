@@ -8,29 +8,30 @@ import com.mineaurion.aurionchat.common.locale.Message;
 import com.mineaurion.aurionchat.common.misc.Predicates;
 import com.mineaurion.aurionchat.common.plugin.AurionChatPlugin;
 
+import java.io.IOException;
 import java.util.List;
 
-public class SpyChannel extends SingleCommand {
+import static com.mineaurion.aurionchat.common.command.CommandSpec.PERMISSION_BY_CHANNEL;
 
-    public SpyChannel(){
-        super(CommandSpec.SPY, "Join", "aurionchat.command.spy", Predicates.inRange(1,2));
+public class Reload extends SingleCommand {
+
+    public Reload(){
+        super(CommandSpec.RELOAD, "Reload", "aurionchat.command.reload", Predicates.inRange(0,1));
     }
 
     @Override
     public boolean beforeExecute(AurionChatPlugin plugin, ServerPlayer sender, List<String> args, String label) {
-        return basicCheckChannelCommand(plugin, sender, args.get(1));
+        return true;
     }
 
     @Override
     public void execute(AurionChatPlugin plugin, ServerPlayer sender, List<String> args, String label) {
-        if(!sender.hasPermission(getPermission())){
-            Message.COMMAND_NO_PERMISSION.send(sender);
-            return;
+        try {
+            plugin.getChatService().reCreateConnection();
+            Message.COMMAND_RELOAD.send(sender);
+        } catch (IOException e) {
+            Message.COMMAND_RELOAD_ERROR.send(sender);
+            e.printStackTrace();
         }
-
-        AurionChatPlayer aurionChatPlayer = getAurionChatPlayer(plugin, sender);
-        String channel = args.get(1);
-        aurionChatPlayer.addChannel(channel);
-        Message.CHANNEL_LEAVE.send(sender, channel);
     }
 }
