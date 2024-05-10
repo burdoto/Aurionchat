@@ -1,7 +1,6 @@
 package com.mineaurion.aurionchat.common.commands;
 
 import com.mineaurion.aurionchat.api.model.ServerPlayer;
-import com.mineaurion.aurionchat.common.AurionChatPlayer;
 import com.mineaurion.aurionchat.common.command.CommandSpec;
 import com.mineaurion.aurionchat.common.command.SingleCommand;
 import com.mineaurion.aurionchat.common.locale.Message;
@@ -10,8 +9,6 @@ import com.mineaurion.aurionchat.common.plugin.AurionChatPlugin;
 
 import java.io.IOException;
 import java.util.List;
-
-import static com.mineaurion.aurionchat.common.command.CommandSpec.PERMISSION_BY_CHANNEL;
 
 public class Reload extends SingleCommand {
 

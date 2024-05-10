@@ -2,6 +2,7 @@ package com.mineaurion.aurionchat.common.command;
 
 import com.mineaurion.aurionchat.api.model.ServerPlayer;
 import com.mineaurion.aurionchat.common.AurionChatPlayer;
+import com.mineaurion.aurionchat.common.config.Channel;
 import com.mineaurion.aurionchat.common.locale.Message;
 import com.mineaurion.aurionchat.common.plugin.AurionChatPlugin;
 import net.kyori.adventure.text.Component;
@@ -9,8 +10,10 @@ import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -64,8 +67,18 @@ public abstract class SingleCommand extends AbstractCommand {
             isValid = false;
             Message.COMMAND_NO_PERMISSION.send(sender);
         }
-
         return isValid;
+    }
+
+    public List<String> basicChannelsTabComplete(AurionChatPlugin plugin, ServerPlayer sender) {
+        Map<String, Channel> channels = plugin.getConfigurationAdapter().getChannels();
+        List<String> tabComplete = new ArrayList<>();
+        channels.forEach((channelName, channel) -> {
+            if(sender.hasPermission(String.format(PERMISSION_BY_CHANNEL, getName().toLowerCase(), channelName))){
+                tabComplete.add(channelName);
+            }
+        });
+        return tabComplete;
     }
 
 }

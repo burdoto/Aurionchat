@@ -1,15 +1,11 @@
 package com.mineaurion.aurionchat.common.locale;
 
 import com.mineaurion.aurionchat.api.model.ServerPlayer;
-import com.mineaurion.aurionchat.common.config.Channel;
 import com.mineaurion.aurionchat.common.plugin.AurionChatPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.TextComponent;
-
-import java.util.List;
-import java.util.Map;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;

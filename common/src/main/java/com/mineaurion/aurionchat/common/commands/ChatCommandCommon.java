@@ -3,18 +3,15 @@ package com.mineaurion.aurionchat.common.commands;
 import com.mineaurion.aurionchat.api.AurionPacket;
 import com.mineaurion.aurionchat.common.AurionChatPlayer;
 import com.mineaurion.aurionchat.common.Utils;
-import com.mineaurion.aurionchat.common.exception.ChannelNotFoundException;
-import com.mineaurion.aurionchat.common.exception.InsufficientPermissionException;
 import com.mineaurion.aurionchat.common.plugin.AbstractAurionChat;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Set;
 
-import static net.kyori.adventure.text.Component.*;
-import static net.kyori.adventure.text.format.NamedTextColor.*;
+import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.format.NamedTextColor.DARK_RED;
 
 public class ChatCommandCommon {
     private final AbstractAurionChat plugin;

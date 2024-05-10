@@ -33,4 +33,9 @@ public class SpyChannel extends SingleCommand {
         aurionChatPlayer.addChannel(channel);
         Message.CHANNEL_LEAVE.send(sender, channel);
     }
+
+    @Override
+    public List<String> tabComplete(AurionChatPlugin plugin, ServerPlayer sender, List<String> args) {
+        return basicChannelsTabComplete(plugin, sender);
+    }
 }

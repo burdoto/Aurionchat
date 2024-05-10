@@ -32,4 +32,9 @@ public class JoinChannel extends SingleCommand {
         aurionChatPlayer.setCurrentChannel(channel);
         Message.CHANNEL_JOIN.send(sender, channel);
     }
+
+    @Override
+    public List<String> tabComplete(AurionChatPlugin plugin, ServerPlayer sender, List<String> args) {
+        return basicChannelsTabComplete(plugin, sender);
+    }
 }

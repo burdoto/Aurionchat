@@ -4,13 +4,11 @@ import com.mineaurion.aurionchat.api.model.ServerPlayer;
 import com.mineaurion.aurionchat.common.AurionChatPlayer;
 import com.mineaurion.aurionchat.common.command.CommandSpec;
 import com.mineaurion.aurionchat.common.command.SingleCommand;
-import com.mineaurion.aurionchat.common.config.Channel;
 import com.mineaurion.aurionchat.common.locale.Message;
 import com.mineaurion.aurionchat.common.misc.Predicates;
 import com.mineaurion.aurionchat.common.plugin.AurionChatPlugin;
 
 import java.util.List;
-import java.util.Map;
 
 import static com.mineaurion.aurionchat.common.command.CommandSpec.PERMISSION_BY_CHANNEL;
 
