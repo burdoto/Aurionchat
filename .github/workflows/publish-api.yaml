@@ -10,6 +10,7 @@ jobs:
     outputs:
       tag: ${{ steps.vars.outputs.tag }}
     steps:
+      - uses: actions/checkout@v4
       - id: vars
         run: echo "tag=`cat gradle.properties | grep apiVersion | cut -d'=' -f2`" >> $GITHUB_OUTPUT
   planner:
