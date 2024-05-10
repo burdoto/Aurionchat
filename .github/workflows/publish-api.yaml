@@ -36,7 +36,9 @@ jobs:
 
   release:
     runs-on: ubuntu-22.04
-    needs: planner
+    needs:
+      - planner
+      - getVersion
     if: needs.planner.outputs.do_release == 'true'
     steps:
       - uses: actions/checkout@v4
