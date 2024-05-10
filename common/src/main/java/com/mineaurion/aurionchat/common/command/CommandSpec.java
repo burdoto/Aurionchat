@@ -4,39 +4,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 public enum CommandSpec {
 
-    BALANCE("/%s balance <user>",
-            arg("user", false)),
+    JOIN("/%s join <channel>",
+            arg("channel", true)),
 
-    WITHDRAW("/%s withdraw <user> <amount>",
-            arg("user", true),
-            arg("amount", true)
-    ),
+    LEAVE("/%s leave <channel>",
+            arg("channel", true)),
 
-    ADD("/%s add <user> <amount>",
-            arg("user", true),
-            arg("amount", true)
-    ),
+    SPY("/%s spy <channel>",
+            arg("channel", true)),
 
-    SET("/%s set <user> <amount>",
-            arg("user", true),
-            arg("amount", true)
-    ),
-    PAY("/%s pay <user> <amount>",
-            arg("user", true),
-            arg("amount", true)
-    ),
-    CHECK("/%s check <user> <amount> <commands>",
-            arg("user", true),
-            arg("amount", true),
-            arg("commands...", true)
-    ),
+    ALL_LISTEN("/%s alllisten");
 
-    TOP("/%s top"),
-
-    LOG("/%s log");
-
+    public final static String PERMISSION_BY_CHANNEL = "aurionchat.channel.%s.%s";
     private final String usage;
     private final List<Argument> args;
 

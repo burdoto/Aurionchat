@@ -3,7 +3,6 @@ package com.mineaurion.aurionchat.common.command;
 import com.mineaurion.aurionchat.api.model.ServerPlayer;
 import com.mineaurion.aurionchat.common.plugin.AurionChatPlugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -18,27 +17,17 @@ public abstract class AbstractCommand {
 
     private final @NonNull String permission;
 
-    private final @Nullable String adminPermission;
-
     private final @NonNull Predicate<Integer> argumentCheck;
 
     public AbstractCommand(@NonNull CommandSpec spec, @NonNull String name, @NonNull String permission, @NonNull Predicate<Integer> argumentCheck){
-        this(
-                spec,
-                name,
-                permission,
-                null,
-                argumentCheck
-        );
-    }
-
-    public AbstractCommand(@NonNull CommandSpec spec, @NonNull String name, @NonNull String permission, @Nullable String adminPermission, @NonNull Predicate<Integer> argumentCheck){
         this.spec = spec;
         this.name = name;
         this.permission = permission;
-        this.adminPermission = adminPermission;
         this.argumentCheck = argumentCheck;
     }
+
+    // Method before execute method, to make some check and eventually cancel the execute method when the method return false
+    public abstract boolean beforeExecute(AurionChatPlugin plugin, ServerPlayer sender, List<String> args, String label);
 
     // Main execution method for the command.
     public abstract void execute(AurionChatPlugin plugin, ServerPlayer sender, List<String> args, String label) throws Exception;
@@ -64,10 +53,6 @@ public abstract class AbstractCommand {
 
     public @NotNull String getPermission(){
         return permission;
-    }
-
-    public Optional<String> getAdminPermission(){
-        return Optional.ofNullable(adminPermission);
     }
 
     public Optional<List<Argument>> getArgs(){

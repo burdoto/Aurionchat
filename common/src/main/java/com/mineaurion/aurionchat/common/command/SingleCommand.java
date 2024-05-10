@@ -1,6 +1,8 @@
 package com.mineaurion.aurionchat.common.command;
 
 import com.mineaurion.aurionchat.api.model.ServerPlayer;
+import com.mineaurion.aurionchat.common.AurionChatPlayer;
+import com.mineaurion.aurionchat.common.locale.Message;
 import com.mineaurion.aurionchat.common.plugin.AurionChatPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
@@ -12,14 +14,12 @@ import java.util.Locale;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static com.mineaurion.aurionchat.common.command.CommandSpec.PERMISSION_BY_CHANNEL;
+
 public abstract class SingleCommand extends AbstractCommand {
 
     public SingleCommand(CommandSpec spec, String name, String permission, Predicate<Integer> argumentCheck){
         super(spec, name, permission, argumentCheck);
-    }
-
-    public SingleCommand(CommandSpec spec, String name, String permission, String adminPermission, Predicate<Integer> argumentCheck){
-        super(spec, name, permission, adminPermission, argumentCheck);
     }
 
     public abstract void execute(AurionChatPlugin plugin, ServerPlayer sender, List<String> args, String label) throws Exception;
@@ -42,7 +42,30 @@ public abstract class SingleCommand extends AbstractCommand {
         sender.sendMessage(builder.build());
     }
 
-//    public Optional<UUID> getPlayerUUID(AurionChatPlugin plugin, List<String> args, int index){
-//        return Utils.isValidUUID(args.get(index)) ? Optional.of(UUID.fromString(args.get(index))) : plugin.lookupUUID(args.get(index));
-//    }
+    public AurionChatPlayer getAurionChatPlayer(AurionChatPlugin plugin, ServerPlayer sender){
+        return plugin.getAurionChatPlayers().get(sender.getId());
+    }
+
+    ;
+
+    public boolean basicCheckChannelCommand(AurionChatPlugin plugin, ServerPlayer sender, String channel){
+        boolean isValid = true;
+        if(!plugin.getConfigurationAdapter().getChannels().containsKey(channel)){
+            isValid = false;
+            Message.CHANNEL_NOT_FOUND.send(sender, channel);
+        }
+
+        if(getAurionChatPlayer(plugin, sender) == null){
+            isValid = false;
+            Message.PLAYER_NOT_REGISTERED.send(sender);
+        }
+
+        if(!sender.hasPermission(String.format(PERMISSION_BY_CHANNEL, getName().toLowerCase(), channel))){
+            isValid = false;
+            Message.COMMAND_NO_PERMISSION.send(sender);
+        }
+
+        return isValid;
+    }
+
 }

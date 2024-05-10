@@ -76,6 +76,10 @@ public class CommandManager {
             return;
         }
 
+        if(!main.beforeExecute(this.plugin, sender, arguments, label)){
+            return;
+        }
+
         //Exec command
         try{
             main.execute(this.plugin, sender, arguments, label);

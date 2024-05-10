@@ -1,6 +1,6 @@
 package com.mineaurion.aurionchat.common.locale;
 
-import com.mineaurion.aurionchat.common.command.sender.Sender;
+import com.mineaurion.aurionchat.api.model.ServerPlayer;
 import com.mineaurion.aurionchat.common.config.Channel;
 import com.mineaurion.aurionchat.common.plugin.AurionChatPlugin;
 import net.kyori.adventure.text.Component;
@@ -34,6 +34,8 @@ public interface Message {
                 .build();
     }
     Args0 COMMAND_NO_PERMISSION = () -> prefixed(text("You do no have permission to use this command")).color(RED);
+
+    Args0 PLAYER_NOT_REGISTERED = () -> prefixed(text("Your player is not registered on the server, there is an issue. Contact the administrator")).color(RED);
 
     Args1<String> CHANNEL_JOIN = (channel) -> joinNewline(
             prefixed(text()
@@ -100,7 +102,7 @@ public interface Message {
     interface Args0 {
         Component build();
 
-        default void send(Sender sender) {
+        default void send(ServerPlayer sender) {
             sender.sendMessage(build());
         }
     }
@@ -108,7 +110,7 @@ public interface Message {
     interface Args1<A0> {
         Component build(A0 arg0);
 
-        default void send(Sender sender, A0 arg0) {
+        default void send(ServerPlayer sender, A0 arg0) {
             sender.sendMessage(build(arg0));
         }
     }
@@ -116,7 +118,7 @@ public interface Message {
     interface Args2<A0, A1> {
         Component build(A0 arg0, A1 arg1);
 
-        default void send(Sender sender, A0 arg0, A1 arg1) {
+        default void send(ServerPlayer sender, A0 arg0, A1 arg1) {
             sender.sendMessage(build(arg0, arg1));
         }
     }
