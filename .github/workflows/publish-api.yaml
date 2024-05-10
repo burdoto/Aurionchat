@@ -16,6 +16,8 @@ jobs:
   planner:
     needs: getVersion
     runs-on: ubuntu-22.04
+    outputs:
+      do_release: ${{ steps.do_release.outputs.do_release }}
     steps:
       - uses: actions/checkout@v4
         with:
