@@ -1,12 +1,48 @@
 plugins {
-    id("java-library")
+    id 'java-library'
+    id 'maven-publish'
 }
+
+version = project.apiVersion
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
+    compileOnly 'org.jetbrains:annotations:+'
     compileOnly 'com.google.code.gson:gson:2.10.1'
+
+    api('net.kyori:adventure-api:4.11.0') {
+        exclude(module: 'adventure-bom')
+        exclude(module: 'checker-qual')
+        exclude(module: 'annotations')
+    }
+
+    api('net.kyori:adventure-text-serializer-gson:4.11.0') {
+        exclude(module: 'adventure-bom')
+        exclude(module: 'adventure-api')
+        exclude(module: 'gson')
+    }
+
+    api('net.kyori:adventure-text-serializer-legacy:4.11.0') {
+        exclude(module: 'adventure-bom')
+        exclude(module: 'adventure-api')
+    }
+
+    api('net.kyori:adventure-text-serializer-plain:4.11.0') {
+        exclude(module: 'adventure-bom')
+        exclude(module: 'adventure-api')
+    }
+
+    api("net.kyori:adventure-text-minimessage:4.11.0") {
+        exclude(module: 'adventure-bom')
+        exclude(module: 'adventure-api')
+    }
+
+    api('net.kyori:event-api:3.0.0') {
+        exclude(module: 'checker-qual')
+        exclude(module: 'guava')
+    }
 }
 
 publishing {
@@ -16,6 +52,14 @@ publishing {
         }
     }
     repositories {
+//        maven {
+//            name = "OSSRH"
+//            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+//            credentials {
+//                username = System.getenv("MAVEN_USERNAME")
+//                password = System.getenv("MAVEN_PASSWORD")
+//            }
+//        }
         maven {
             name = "GitHubPackages"
             url = "https://maven.pkg.github.com/Mineaurion/aurionchat"
