@@ -14,6 +14,7 @@ jobs:
       - id: vars
         run: echo "tag=`cat gradle.properties | grep apiVersion | cut -d'=' -f2`" >> $GITHUB_OUTPUT
   planner:
+    needs: getVersion
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
