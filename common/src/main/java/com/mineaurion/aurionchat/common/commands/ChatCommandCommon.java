@@ -1,11 +1,11 @@
-package com.mineaurion.aurionchat.common.command;
+package com.mineaurion.aurionchat.common.commands;
 
 import com.mineaurion.aurionchat.api.AurionPacket;
-import com.mineaurion.aurionchat.common.AbstractAurionChat;
 import com.mineaurion.aurionchat.common.AurionChatPlayer;
 import com.mineaurion.aurionchat.common.Utils;
 import com.mineaurion.aurionchat.common.exception.ChannelNotFoundException;
 import com.mineaurion.aurionchat.common.exception.InsufficientPermissionException;
+import com.mineaurion.aurionchat.common.plugin.AbstractAurionChat;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
