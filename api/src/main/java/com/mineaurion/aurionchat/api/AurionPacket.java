@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mineaurion.aurionchat.api.model.Named;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,8 +28,8 @@ public final class AurionPacket implements Named, Serializable {
         this.player = player;
         this.channel = channel;
         this.displayName = displayName;
-        this.displayString = getStringFromComponent(getComponent());
         this.tellRawData = tellRawData;
+        this.displayString = PlainTextComponentSerializer.plainText().serialize(getComponent());
     }
 
     public static Builder chat(AurionPlayer player, Object tellRaw) {
@@ -96,27 +97,6 @@ public final class AurionPacket implements Named, Serializable {
 
     public Component getComponent() {
         return gson().deserialize(tellRawData);
-    }
-
-    public static String getStringFromComponent(Component component){
-        StringBuilder content = new StringBuilder();
-
-        if(!component.children().isEmpty()){
-            component.children().forEach( child -> content.append(getStringFromComponent(child)));
-        }
-
-        if(component instanceof TextComponent){
-            content.append(((TextComponent) component).content());
-        }
-        // todo: support other types
-        //else if (it instanceof BlockNBTComponent) ;
-        //else if (it instanceof EntityNBTComponent) ;
-        //else if (it instanceof KeybindComponent) ;
-        //else if (it instanceof ScoreComponent) ;
-        //else if (it instanceof SelectorComponent) ;
-        //else if (it instanceof StorageNBTComponent) ;
-        //else if (it instanceof TranslatableComponent) ;
-        return content.toString();
     }
 
     @Override
