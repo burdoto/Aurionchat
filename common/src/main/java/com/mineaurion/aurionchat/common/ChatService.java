@@ -56,7 +56,7 @@ public class ChatService {
             throw new IOException(UriKeyException);
         } catch (IOException|TimeoutException e) {
             System.out.println("Can't connect to rabbitmq, check the log for more error");
-            System.out.println(e.getMessage());
+            e.printStackTrace(System.err);
             throw new IOException(e);
         }
     }
