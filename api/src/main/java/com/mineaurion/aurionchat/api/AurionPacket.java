@@ -1,10 +1,11 @@
 package com.mineaurion.aurionchat.api;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mineaurion.aurionchat.api.model.Named;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,11 +13,11 @@ import org.jetbrains.annotations.Nullable;
 import java.io.Serializable;
 import java.util.Optional;
 
-import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
+import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.*;
 
 public final class AurionPacket implements Named, Serializable {
 
-    public static final Gson gson = new Gson();
+    public static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     public static Builder builder() {
         return new Builder();
@@ -51,40 +52,47 @@ public final class AurionPacket implements Named, Serializable {
     /**
      * Packet type
      */
+    @Expose
     private final Type type;
 
     /**
      * One of: servername, 'discord' or 'ingame' literal
      */
+    @Expose
     private final String source;
 
     /**
      * Related player
      */
+    @Expose
     @Nullable
     private final AurionPlayer player;
 
     /**
      * Channel name
      */
+    @Expose
     @Nullable
     private final String channel;
 
     /**
      * Display name of sender (one of: player name, automessage title)
      */
+    @Expose
     @Nullable
     private final String displayName;
 
     /**
      * Only the string of the message without any colors or stuff from the game
      */
+    @Expose
     @NotNull
     private final String displayString;
 
     /**
      * What ingame players see
      */
+    @Expose
     @NotNull
     private final String tellRawData;
 
