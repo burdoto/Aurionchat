@@ -12,89 +12,69 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.*;
 
-public final class AurionPacket implements Named, Serializable {
-
-    public static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+public class AurionPacket implements Named, Serializable {
+    public static final Gson                           GSON  = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    public static       Function<String, AurionPacket> PARSE = AurionPacket::fromJson;
 
     public static Builder builder() {
         return new Builder();
     }
 
-    public AurionPacket(Type type, String source, @Nullable AurionPlayer player, @Nullable String channel, @Nullable String displayName, @NotNull String tellRawData) {
-        this.type = type;
-        this.source = source;
-        this.player = player;
-        this.channel = channel;
-        this.displayName = displayName;
-        this.tellRawData = tellRawData;
-        this.displayString = PlainTextComponentSerializer.plainText().serialize(getComponent());
+    public static AurionPacket fromJson(String jsonString) {
+        return GSON.fromJson(jsonString, AurionPacket.class);
     }
 
     public static Builder chat(AurionPlayer player, Object tellRaw) {
-        return AurionPacket.builder()
-                .type(Type.CHAT)
-                .source("ingame")
-                .player(player)
-                .tellRawData(tellRaw.toString());
+        return AurionPacket.builder().type(Type.CHAT).source("ingame").player(player).tellRawData(tellRaw.toString());
     }
 
     public static Builder autoMessage(Object tellRaw) {
-        return AurionPacket.builder()
-                .type(Type.AUTO_MESSAGE)
-                .source("automessage")
-                .displayName("AutoMessage")
-                .tellRawData(tellRaw.toString());
+        return AurionPacket.builder().type(Type.AUTO_MESSAGE).source("automessage").displayName("AutoMessage").tellRawData(tellRaw.toString());
     }
 
     /**
      * Packet type
      */
-    @Expose
-    private final Type type;
-
+    @Expose private final           Type         type;
     /**
      * One of: servername, 'discord' or 'ingame' literal
      */
-    @Expose
-    private final String source;
-
+    @Expose private final           String       source;
     /**
      * Related player
      */
-    @Expose
-    @Nullable
-    private final AurionPlayer player;
-
+    @Expose @Nullable private final AurionPlayer player;
     /**
      * Channel name
      */
-    @Expose
-    @Nullable
-    private final String channel;
-
+    @Expose @Nullable private final String       channel;
     /**
      * Display name of sender (one of: player name, automessage title)
      */
-    @Expose
-    @Nullable
-    private final String displayName;
-
+    @Expose @Nullable private final String       displayName;
     /**
      * Only the string of the message without any colors or stuff from the game
      */
-    @Expose
-    @NotNull
-    private final String displayString;
-
+    @Expose @NotNull private final  String       displayString;
     /**
      * What ingame players see
      */
-    @Expose
-    @NotNull
-    private final String tellRawData;
+    @Expose @NotNull private final  String       tellRawData;
+
+    public AurionPacket(
+            Type type, String source, @Nullable AurionPlayer player, @Nullable String channel, @Nullable String displayName, @NotNull String tellRawData) {
+        this.type          = type;
+        this.source        = source;
+        this.player        = player;
+        this.channel       = channel;
+        this.displayName   = displayName;
+        this.tellRawData   = tellRawData;
+        this.displayString = PlainTextComponentSerializer.plainText().serialize(getComponent());
+    }
 
     /**
      * What to display in plaintext environments
@@ -108,20 +88,8 @@ public final class AurionPacket implements Named, Serializable {
     }
 
     @Override
-    public String toString() {
-        return gson.toJson(this);
-    }
-
-    public static AurionPacket fromJson(String jsonString){
-        return gson.fromJson(jsonString, AurionPacket.class);
-    }
-
-    @Override
     public @Nullable String getName() {
-        return Optional.ofNullable(player)
-                .map(Named::getBestName)
-                .orElse(null)
-                ;
+        return Optional.ofNullable(player).map(Named::getBestName).orElse(null);
     }
 
     @Override
@@ -145,7 +113,7 @@ public final class AurionPacket implements Named, Serializable {
         return this.channel;
     }
 
-    public @NotNull String getDisplayString(){
+    public @NotNull String getDisplayString() {
         return this.displayString;
     }
 
@@ -153,36 +121,34 @@ public final class AurionPacket implements Named, Serializable {
         return this.tellRawData;
     }
 
+    @Override
+    public String toString() {
+        return GSON.toJson(this);
+    }
+
     public Builder toBuilder() {
-        return new Builder()
-                .type(this.type)
+        return new Builder().type(this.type)
                 .source(this.source)
                 .player(this.player)
                 .channel(this.channel)
                 .displayName(this.displayName)
-                .tellRawData(this.tellRawData)
-        ;
+                .tellRawData(this.tellRawData);
     }
 
     public enum Type {
-        @SerializedName("chat")
-        CHAT,
-        @SerializedName("automessage")
-        AUTO_MESSAGE,
-        @SerializedName("event_join")
-        EVENT_JOIN,
-        @SerializedName("event_achievement")
-        EVENT_ACHIEVEMENT,
+        @SerializedName("chat") CHAT,
+        @SerializedName("automessage") AUTO_MESSAGE,
+        @SerializedName("event_join") EVENT_JOIN,
+        @SerializedName("event_achievement") EVENT_ACHIEVEMENT,
     }
 
-
     public static class Builder {
-        private Type type;
-        private String source;
+        private           Type   type;
+        private           String source;
         private @Nullable AurionPlayer player;
         private @Nullable String channel;
         private @Nullable String displayName;
-        private @NotNull String tellRawData = "";
+        private @NotNull  String tellRawData = "";
 
         public Builder type(Type type) {
             this.type = type;
