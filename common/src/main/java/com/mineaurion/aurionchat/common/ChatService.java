@@ -14,6 +14,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.concurrent.TimeoutException;
 
 public class ChatService {
@@ -47,7 +48,7 @@ public class ChatService {
             factory.setRequestedHeartbeat(10);
             factory.setExceptionHandler(new ForgivingExceptionHandler());
 
-            connection = factory.newConnection();
+            connection = factory.newConnection(plugin.getServerName());
             channel = connection.createChannel();
             join();
             connected = true;
@@ -69,7 +70,8 @@ public class ChatService {
     private void join() throws IOException{
         channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
 
-        String queue = channel.queueDeclare().getQueue();
+        String queue = channel.queueDeclare(plugin.getServerName() + ".AurionChat",
+                true, true, true, new HashMap<>()).getQueue();
         channel.queueBind(queue, EXCHANGE_NAME, "");
 
         channel.basicConsume(queue, true, consumer(), consumerTag -> {});
@@ -101,7 +103,7 @@ public class ChatService {
 
     public void send(AurionPacket.Builder builder) throws IOException {
         // add context info
-        AurionPacket packet = builder.source(config.getString("server-name", "ingame")).build();
+        AurionPacket packet = builder.source(plugin.getServerName() + ".AurionChat").build();
 
         // send
         channel.basicPublish(EXCHANGE_NAME, "", null, packet.toString().getBytes());
