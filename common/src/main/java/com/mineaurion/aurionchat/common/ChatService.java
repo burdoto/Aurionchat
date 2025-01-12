@@ -81,10 +81,8 @@ public class ChatService {
         return (consumerTag, delivery) -> {
             AurionPacket packet = AurionPacket.fromJson(new String(delivery.getBody(), StandardCharsets.UTF_8));
             Component messageDeserialize = packet.getComponent();
-            if(this.config.getBoolean("options.spy", false)){
-                plugin.getlogger().info(packet.getDisplayString());
-            }
 
+            plugin.getlogger().info(packet.getDisplayString());
             plugin.getAurionChatPlayers().forEach((uuid, aurionChatPlayers) -> {
                 if(packet.getType().equals(AurionPacket.Type.AUTO_MESSAGE) && this.config.getBoolean("options.automessage", false)){
                     if(aurionChatPlayers.hasPermission("aurionchat.automessage." + packet.getChannel())){
