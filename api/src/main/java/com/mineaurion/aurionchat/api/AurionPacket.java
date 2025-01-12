@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -45,6 +47,10 @@ public class AurionPacket implements Named, Serializable {
      */
     @Expose private final           String       source;
     /**
+     *
+     */
+    @Expose private final List<String> route;
+    /**
      * Related player
      */
     @Expose @Nullable private final AurionPlayer player;
@@ -66,9 +72,12 @@ public class AurionPacket implements Named, Serializable {
     @Expose @NotNull private final  String       tellRawData;
 
     public AurionPacket(
-            Type type, String source, @Nullable AurionPlayer player, @Nullable String channel, @Nullable String displayName, @NotNull String tellRawData) {
+            Type type, String source, List<String> route, @Nullable AurionPlayer player, @Nullable String channel, @Nullable String displayName,
+            @NotNull String tellRawData
+    ) {
         this.type          = type;
         this.source        = source;
+        this.route = route;
         this.player        = player;
         this.channel       = channel;
         this.displayName   = displayName;
@@ -103,6 +112,10 @@ public class AurionPacket implements Named, Serializable {
 
     public String getSource() {
         return this.source;
+    }
+
+    public List<String> getRoute() {
+        return this.route;
     }
 
     public @Nullable AurionPlayer getPlayer() {
@@ -181,7 +194,7 @@ public class AurionPacket implements Named, Serializable {
         }
 
         public AurionPacket build() {
-            return new AurionPacket(this.type, this.source, this.player, this.channel, this.displayName, this.tellRawData);
+            return new AurionPacket(this.type, this.source, new ArrayList<>(), this.player, this.channel, this.displayName, this.tellRawData);
         }
     }
 }

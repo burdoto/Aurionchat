@@ -101,7 +101,8 @@ public class ChatService {
 
     public void send(AurionPacket.Builder builder) throws IOException {
         // add context info
-        AurionPacket packet = builder.source(plugin.getServerName() + ".AurionChat").build();
+        AurionPacket packet = builder.source(plugin.getServerName()).build();
+        packet.getRoute().add(plugin.getServerName());
 
         // send
         channel.basicPublish(EXCHANGE_NAME, "", null, packet.toString().getBytes());
