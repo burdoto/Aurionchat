@@ -4,17 +4,20 @@ import com.mineaurion.aurionchat.common.AurionChatPlayer;
 import com.mineaurion.aurionchat.common.config.ConfigurationAdapter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 import java.util.function.UnaryOperator;
 
-import static com.mineaurion.aurionchat.api.AurionPacket.getStringFromComponent;
-import static com.mineaurion.aurionchat.common.Utils.URL_MODE;
-import static com.mineaurion.aurionchat.common.Utils.processMessage;
-import static net.kyori.adventure.text.Component.text;
+import static com.mineaurion.aurionchat.common.Utils.*;
+import static net.kyori.adventure.text.Component.*;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
@@ -100,7 +103,7 @@ public class TestMessageProcessing {
         assertTrue("invalid children count", children.get(1).children().size() > childrenIndex);
         Component child = children.get(1).children().get(childrenIndex);
         ClickEvent event = child.clickEvent();
-        assertNull("url should not be clickable: "+ getStringFromComponent(child),event);
+        assertNull("url should not be clickable: " + PlainTextComponentSerializer.plainText().serialize(output), event);
     }
 
     /**
@@ -125,7 +128,7 @@ public class TestMessageProcessing {
                 .build()
                 ;
         Component output = processMessage(format, grandParent, player, Collections.emptyList());
-        String displayString = getStringFromComponent(output);
+        String displayString = PlainTextComponentSerializer.plainText().serialize(output);
         System.out.println(displayString);
         assertEquals(2 + 1, output.children().size());
     }
@@ -135,7 +138,7 @@ public class TestMessageProcessing {
         Component output = processMessage(format, text(testUrl1), player, Arrays.asList(URL_MODE.ALLOW, URL_MODE.DISPLAY_ONLY_DOMAINS));
 
         // check display
-        String displayString = getStringFromComponent(output);
+        String displayString = PlainTextComponentSerializer.plainText().serialize(output);
         System.out.println(displayString);
         assertEquals("display string mismatch", format(testUrl1), displayString);
         checkClickable(output, 0, 0, TestMessageProcessing::testUrlClickable);
@@ -147,7 +150,7 @@ public class TestMessageProcessing {
         Component output = processMessage(format, text(testUrl1), player, Collections.singletonList(URL_MODE.CLICK_DOMAIN));
 
         // check display
-        String displayString = getStringFromComponent(output);
+        String displayString = PlainTextComponentSerializer.plainText().serialize(output);
         System.out.println(displayString);
 
         assertEquals("display string mismatch", format(testUrl1), displayString);
@@ -159,7 +162,7 @@ public class TestMessageProcessing {
         Component output = processMessage(format, text(testUrlClickable(testUrl1)), player, Collections.singletonList(URL_MODE.ALLOW));
 
         // check display
-        String displayString = getStringFromComponent(output);
+        String displayString = PlainTextComponentSerializer.plainText().serialize(output);
         System.out.println(displayString);
         assertEquals("display string mismatch", format(testUrlClickable(testUrl1)), displayString);
 
@@ -171,7 +174,7 @@ public class TestMessageProcessing {
         Component output = processMessage(format, text(testText(testUrl1, testUrlHttp(testUrl2), false)), player, Arrays.asList(URL_MODE.FORCE_HTTPS, URL_MODE.ALLOW));
 
         // check display
-        String displayString = getStringFromComponent(output);
+        String displayString = PlainTextComponentSerializer.plainText().serialize(output);
         System.out.println(displayString);
         assertEquals("display string mismatch", testText(testUrl1, testUrlClickable(testUrl2), true), displayString);
 
@@ -184,7 +187,7 @@ public class TestMessageProcessing {
         Component output = processMessage(format, text(testText(testUrl1, testUrlClickable(testUrl2), false)), player, Arrays.asList(URL_MODE.DISPLAY_ONLY_DOMAINS, URL_MODE.DISSALLOW_URL));
 
         // check display
-        String displayString = getStringFromComponent(output);
+        String displayString = PlainTextComponentSerializer.plainText().serialize(output);
         System.out.println(displayString);
         assertEquals("display string mismatch", testText(testUrl1, testUrlRemoved, true), displayString);
 
@@ -197,7 +200,7 @@ public class TestMessageProcessing {
         Component output = processMessage(format, text(testText(testUrl1, testUrlClickable(testUrl2), false)), player, Collections.singletonList(URL_MODE.DISALLOW));
 
         // check display
-        String displayString = getStringFromComponent(output);
+        String displayString = PlainTextComponentSerializer.plainText().serialize(output);
         System.out.println(displayString);
         assertEquals("display string mismatch", testText(testUrlRemoved, testUrlRemoved, true), displayString);
 
@@ -210,7 +213,7 @@ public class TestMessageProcessing {
         Component output = processMessage(format, text(testText(testUrlClickable(testUrl1), testUrlClickable(testUrl2), false)), player, Arrays.asList(URL_MODE.CLICK_DOMAIN, URL_MODE.DISPLAY_ONLY_DOMAINS));
 
         // check display
-        String displayString = getStringFromComponent(output);
+        String displayString = PlainTextComponentSerializer.plainText().serialize(output);
         System.out.println(displayString);
         assertEquals("display string mismatch", testText(testUrl1, testUrl2, true), displayString);
 
@@ -223,7 +226,7 @@ public class TestMessageProcessing {
         Component output = processMessage(format, text(testText(testUrl1, testUrlHttp(testUrl2), false)), player, Collections.singletonList(URL_MODE.ALLOW));
 
         // check display
-        String displayString = getStringFromComponent(output);
+        String displayString = PlainTextComponentSerializer.plainText().serialize(output);
         System.out.println(displayString);
         assertEquals("display string mismatch", testText(testUrl1, testUrlHttp(testUrl2), true), displayString);
 
